@@ -1,10 +1,29 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 from pathlib import Path
+from pydantic import BaseModel, Field
 
+import re
+import pickle
+from keras.models import load_model
+
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
-import pandas as pd
 
-<<<<<<< HEAD
+"""
+1. we are going to make the contrint like
+A. Model Path (BiGRU)
+B. Tokenizer Path
+C. Max Sequnce Length = 50
+D. Emotion Labels 
+E. Emotion emoji
+"""
+
+
+# Resolve project files from this module so the app works from any working directory.
 BASE_DIR = Path(__file__).resolve().parent
 ARTIFACTS_DIR = BASE_DIR / "Artifacts"
 STATIC_DIR = BASE_DIR / "static"
@@ -14,26 +33,14 @@ model_Path = ARTIFACTS_DIR / "BiGRU_Model.keras"
 
 # Tokenizer Path Load
 tokenizer_path = ARTIFACTS_DIR / "tokenizer.pkl"
-=======
 
-
-# load models and all other artifacts
-BASE_DIR = Path(__file__).resolve().parent
-ARTIFACTS_DIR = BASE_DIR / "Artifacts"
-STATIC_DIR = BASE_DIR / "static"
-
-
-# model path
-model_pah = ARTIFACTS_DIR / "BiGRU_Model.keras"
-# tokenizer path
-tokenizer_pah = ARTIFACTS_DIR / "tokenizer.pkl"
->>>>>>> refs/remotes/origin/main
 
 # Mx Seq Len
 max_seq_len = 50
 
+# Emotion Labels
+emotion_labels = ['sadness', 'joy', 'love', 'anger', 'fear', 'surprise']
 
-<<<<<<< HEAD
 # emotion emoji
 emotion_emoji = {
     "sadness": "😢",
@@ -214,6 +221,3 @@ def prediction(text_input: TextInput):
         confidence=float(probabilities[predicted_index]),
         all_probabilities=all_probabilities
     )
-=======
-app = FastAPI()
->>>>>>> refs/remotes/origin/main
